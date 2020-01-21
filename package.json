@@ -1,0 +1,10 @@
+{
+  "name": "BartTracker",
+  "version": "0.0.1",
+  "description": "Using BART's public API",
+  "main": "index.js",
+  "repository": "git@github.com:cintiamh/BartTracker.git",
+  "author": "Cintia Higashi",
+  "license": "GNU General Public License",
+  "private": false
+}
