@@ -11,8 +11,6 @@ app.get('/', (req: Request, res: Response) => {
     });
 });
 
-
-
 if (require.main === module) {
     app.listen(PORT, () => {
         console.log('Server started at http://localhost:' + PORT);
