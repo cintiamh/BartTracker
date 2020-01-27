@@ -105,7 +105,7 @@ eval("module.exports = function(module) {\n\tif (!module.webpackPolyfill) {\n\t\
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/* WEBPACK VAR INJECTION */(function(module) {\nexports.__esModule = true;\nvar express = __webpack_require__(/*! express */ \"express\");\nvar app = express();\nvar _a = process.env.PORT, PORT = _a === void 0 ? 3000 : _a;\napp.get('/', function (req, res) {\n    res.send({\n        message: 'Hello world!'\n    });\n});\nif (__webpack_require__.c[__webpack_require__.s] === module) {\n    app.listen(PORT, function () {\n        console.log('Server started at http://localhost:' + PORT);\n    });\n}\nexports[\"default\"] = app;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack:///./src/index.ts?");
+eval("/* WEBPACK VAR INJECTION */(function(module) {\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nexports.__esModule = true;\nvar express_1 = __importDefault(__webpack_require__(/*! express */ \"express\"));\nvar express_graphql_1 = __importDefault(__webpack_require__(/*! express-graphql */ \"express-graphql\"));\nvar graphql_1 = __webpack_require__(/*! graphql */ \"graphql\");\nvar schema = graphql_1.buildSchema(\"\\n    type Query {\\n        hello:String\\n    }\\n\");\nvar root = {\n    hello: function () {\n        return 'Hello World!';\n    }\n};\nvar app = express_1[\"default\"]();\nvar _a = process.env.PORT, PORT = _a === void 0 ? 3000 : _a;\napp.get('/', function (req, res) {\n    res.send({\n        message: 'Hello world!'\n    });\n});\napp.use('/graphql', express_graphql_1[\"default\"]({\n    schema: schema,\n    rootValue: root,\n    graphiql: true\n}));\nif (__webpack_require__.c[__webpack_require__.s] === module) {\n    app.listen(PORT, function () {\n        console.log('Server started at http://localhost:' + PORT);\n    });\n}\nexports[\"default\"] = app;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack:///./src/index.ts?");
 
 /***/ }),
 
@@ -117,6 +117,28 @@ eval("/* WEBPACK VAR INJECTION */(function(module) {\nexports.__esModule = true;
 /***/ (function(module, exports) {
 
 eval("module.exports = require(\"express\");\n\n//# sourceURL=webpack:///external_%22express%22?");
+
+/***/ }),
+
+/***/ "express-graphql":
+/*!**********************************!*\
+  !*** external "express-graphql" ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"express-graphql\");\n\n//# sourceURL=webpack:///external_%22express-graphql%22?");
+
+/***/ }),
+
+/***/ "graphql":
+/*!**************************!*\
+  !*** external "graphql" ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"graphql\");\n\n//# sourceURL=webpack:///external_%22graphql%22?");
 
 /***/ })
 
