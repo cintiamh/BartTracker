@@ -37,15 +37,15 @@ const stations = [
 const StationType = new GraphQLObjectType({
     name: 'StationType',
     fields: {
-        "name": GraphQLString,
-        "abbr": GraphQLString,
-        "gtfs_latitude": GraphQLFloat,
-        "gtfs_longitude": GraphQLFloat,
-        "address": GraphQLString,
-        "city": GraphQLString,
-        "county": GraphQLString,
-        "state": GraphQLString,
-        "zipcode": GraphQLInt
+        name: { type: GraphQLString },
+        abbr: { type: GraphQLString },
+        gtfs_latitude: { type: GraphQLFloat },
+        gtfs_longitude: { type: GraphQLFloat},
+        address: { type: GraphQLString },
+        city: { type: GraphQLString },
+        county: { type: GraphQLString },
+        state: { type: GraphQLString },
+        zipcode: { type: GraphQLInt }
     }
 })
 
@@ -68,7 +68,12 @@ const RootQuery = new GraphQLObjectType({
                 }
             },
             resolve(parentValue, args) {
-                return stations;
+                for (let i = 0; i < stations.length; i++) {
+                    if (stations[i].abbr === args.abbr) {
+                        return stations[i];
+                    }
+                }
+                return null;
             }
         }
     }

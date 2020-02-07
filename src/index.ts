@@ -22,7 +22,7 @@ const root = {
 
 const app = express();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 4000 } = process.env;
 
 app.get('/', (req: Request, res: Response) => {
     res.send({
