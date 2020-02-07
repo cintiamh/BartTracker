@@ -1,4 +1,5 @@
 import { GraphQLSchema } from "graphql";
+import { getStationByAbbr } from "../src/apiCalls";
 
 const graphql = require('graphql');
 
@@ -68,12 +69,7 @@ const RootQuery = new GraphQLObjectType({
                 }
             },
             resolve(parentValue, args) {
-                for (let i = 0; i < stations.length; i++) {
-                    if (stations[i].abbr === args.abbr) {
-                        return stations[i];
-                    }
-                }
-                return null;
+                return getStationByAbbr(args.abbr);
             }
         }
     }
