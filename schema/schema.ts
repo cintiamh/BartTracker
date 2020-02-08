@@ -1,5 +1,5 @@
 import { GraphQLSchema } from "graphql";
-import { getStationByAbbr } from "../src/apiCalls";
+import { getStationByAbbr, getStations } from "../api/fetches";
 
 const graphql = require('graphql');
 
@@ -7,32 +7,9 @@ const {
     GraphQLObjectType,
     GraphQLFloat,
     GraphQLInt,
+    GraphQLList,
     GraphQLString
 } = graphql;
-
-const stations = [
-    {
-        "name": "12th St. Oakland City Center",
-        "abbr": "12TH",
-        "gtfs_latitude": "37.803768",
-        "gtfs_longitude": "-122.271450",
-        "address": "1245 Broadway",
-        "city": "Oakland",
-        "county": "alameda",
-        "state": "CA",
-        "zipcode": "94612"
-    }, {
-        "name": "16th St. Mission",
-        "abbr": "16TH",
-        "gtfs_latitude": "37.765062",
-        "gtfs_longitude": "-122.419694",
-        "address": "2000 Mission Street",
-        "city": "San Francisco",
-        "county": "sanfrancisco",
-        "state": "CA",
-        "zipcode": "94110"
-    }
-];
 
 // Stations: https://api.bart.gov/api/stn.aspx?cmd=stns&key=MW9S-E7SL-26DU-VV8V&json=y
 const StationType = new GraphQLObjectType({
@@ -61,6 +38,12 @@ const StationType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
+        stations: {
+            type: new GraphQLList(StationType),
+            resolve() {
+                return getStations();
+            }
+        },
         station: {
             type: StationType,
             args: {
@@ -71,7 +54,7 @@ const RootQuery = new GraphQLObjectType({
             resolve(parentValue, args) {
                 return getStationByAbbr(args.abbr);
             }
-        }
+        },
     }
 });
 
