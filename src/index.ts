@@ -1,3 +1,6 @@
+/**
+ * The server will be running from this file. Using express with GraphQL. (@cintiamh)
+ */
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import {buildSchema} from "graphql";

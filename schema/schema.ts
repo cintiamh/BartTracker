@@ -1,3 +1,7 @@
+/**
+ * This is the schema file, since this project is not bit enough to have separated files
+ * for each object's schema. (@cintiamh)
+ */
 import { GraphQLSchema } from "graphql";
 import { getStationByAbbr, getStations } from "../api/fetches";
 

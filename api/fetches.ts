@@ -1,3 +1,7 @@
+/**
+ * Helper methods doing calls to Bart's API. Using axios since it supports promises.
+ * Making it GraphQL friendly. (@cintiamh)
+ */
 import axios from 'axios';
 
 export function getStations() {
