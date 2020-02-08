@@ -3,7 +3,7 @@
  * for each object's schema. (@cintiamh)
  */
 import { GraphQLSchema } from "graphql";
-import { getStationByAbbr, getStations } from "../api/fetches";
+import { getRoutes, getStationByAbbr, getStations } from "../api/fetches";
 
 const graphql = require('graphql');
 
@@ -29,6 +29,27 @@ const StationType = new GraphQLObjectType({
         state: { type: GraphQLString },
         zipcode: { type: GraphQLInt }
     }
+});
+
+const RouteType = new GraphQLObjectType({
+    name: 'RouteType',
+    fields: {
+        name: { type: GraphQLString },
+        abbr: { type: GraphQLString },
+        routeID: { type: GraphQLString },
+        number: { type: GraphQLInt },
+        origin: { type: GraphQLString },
+        destination: { type: GraphQLString },
+        direction: { type: GraphQLString },
+        hexcolor: { type: GraphQLString },
+        color: { type: GraphQLString },
+        num_stns: { type: GraphQLInt },
+        // This throws an error - only works when single route
+        // config: new GraphQLObjectType({
+        //     // this will come from abbr
+        //     station: new GraphQLList(StationType)
+        // })
+    }
 })
 
 // Example path: https://api.bart.gov/api/etd.aspx?cmd=etd&orig=12th&key=MW9S-E7SL-26DU-VV8V&json=y
@@ -42,6 +63,12 @@ const StationType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
+        routes: {
+            type: new GraphQLList(RouteType),
+            resolve() {
+                return getRoutes();
+            }
+        },
         stations: {
             type: new GraphQLList(StationType),
             resolve() {
