@@ -24,6 +24,16 @@ export function getStationByAbbr(abbr: string) {
     });
 }
 
+export function getStationsByAbbrArr(abbrs: Array<string>) {
+  return abbrs.map(abbr => {
+    return axios.get(
+      `http://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${abbr}&key=MW9S-E7SL-26DU-VV8V&json=y`
+    ).then(resp => {
+      return resp.data.root.stations.station;
+    });
+  });
+}
+
 export function getRoutes() {
   return axios.get('http://api.bart.gov/api/route.aspx?cmd=routes&key=MW9S-E7SL-26DU-VV8V&json=y')
   .then(resp => {

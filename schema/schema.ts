@@ -3,7 +3,7 @@
  * for each object's schema. (@cintiamh)
  */
 import { GraphQLSchema } from "graphql";
-import { getRoutes, getStationByAbbr, getStations } from "../api/fetches";
+import { getRoutes, getRouteByNum, getStationByAbbr, getStationsByAbbrArr, getStations } from "../api/fetches";
 
 const graphql = require('graphql');
 
@@ -31,24 +31,34 @@ const StationType = new GraphQLObjectType({
     }
 });
 
+const RouteFields = {
+    name: { type: GraphQLString },
+    abbr: { type: GraphQLString },
+    routeID: { type: GraphQLString },
+    number: { type: GraphQLInt },
+    origin: { type: GraphQLString },
+    destination: { type: GraphQLString },
+    direction: { type: GraphQLString },
+    hexcolor: { type: GraphQLString },
+    color: { type: GraphQLString },
+    num_stns: { type: GraphQLInt },
+};
+
 const RouteType = new GraphQLObjectType({
     name: 'RouteType',
+    fields: RouteFields
+});
+
+const RouteStationsType = new GraphQLObjectType({
+    name: 'RouteStationslType',
     fields: {
-        name: { type: GraphQLString },
-        abbr: { type: GraphQLString },
-        routeID: { type: GraphQLString },
-        number: { type: GraphQLInt },
-        origin: { type: GraphQLString },
-        destination: { type: GraphQLString },
-        direction: { type: GraphQLString },
-        hexcolor: { type: GraphQLString },
-        color: { type: GraphQLString },
-        num_stns: { type: GraphQLInt },
-        // This throws an error - only works when single route
-        // config: new GraphQLObjectType({
-        //     // this will come from abbr
-        //     station: new GraphQLList(StationType)
-        // })
+        ...RouteFields,
+        stations: {
+            type: new GraphQLList(StationType),
+            resolve(parentValue) {
+                return getStationsByAbbrArr(parentValue.config.station);
+            }
+        }
     }
 })
 
@@ -67,6 +77,17 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(RouteType),
             resolve() {
                 return getRoutes();
+            }
+        },
+        route: {
+            type: RouteStationsType,
+            args: {
+                num: {
+                    type: GraphQLInt
+                }
+            },
+            resolve(parentValue, args) {
+                return getRouteByNum(args.num);
             }
         },
         stations: {
