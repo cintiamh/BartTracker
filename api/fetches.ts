@@ -47,3 +47,11 @@ export function getRouteByNum(num: number) {
     return resp.data.root.routes.route;
   })
 }
+
+export function getRealTimeEstimate(stationAbbr: string) {
+  return axios.get(
+    `http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${stationAbbr}&key=MW9S-E7SL-26DU-VV8V&json=y`
+  ).then(resp => {
+    return resp.data.root.station[0];
+  });
+}

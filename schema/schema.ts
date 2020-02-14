@@ -3,11 +3,18 @@
  * for each object's schema. (@cintiamh)
  */
 import { GraphQLSchema } from "graphql";
-import { getRoutes, getRouteByNum, getStationByAbbr, getStationsByAbbrArr, getStations } from "../api/fetches";
+import {
+  getRealTimeEstimate, getRoutes,
+  getRouteByNum,
+  getStationByAbbr,
+  getStationsByAbbrArr,
+  getStations
+} from "../api/fetches";
 
 const graphql = require('graphql');
 
 const {
+    GraphQLBoolean,
     GraphQLObjectType,
     GraphQLFloat,
     GraphQLInt,
@@ -60,54 +67,91 @@ const RouteStationsType = new GraphQLObjectType({
             }
         }
     }
-})
+});
+
+const EstimateType = new GraphQLObjectType({
+  name: "Estimate",
+  fields: {
+    minutes: { type: GraphQLInt },
+    platform: { type: GraphQLInt },
+    direction: { type: GraphQLString },
+    length: { type: GraphQLInt },
+    color: { type: GraphQLString },
+    hexcolor: { type: GraphQLString },
+    bikeflag: { type: GraphQLInt },
+    delay: { type: GraphQLInt }
+  }
+});
+
+const EstimateByDestinationType = new GraphQLObjectType({
+  name: "EstimateByDestination",
+  fields: {
+    destination: { type: GraphQLString },
+    abbreviation: { type: GraphQLString },
+    limited: { type: GraphQLInt },
+    estimate: { type: new GraphQLList(EstimateType) }
+  }
+});
 
 // Example path: https://api.bart.gov/api/etd.aspx?cmd=etd&orig=12th&key=MW9S-E7SL-26DU-VV8V&json=y
-// const RealTimeEstimatesType = new GraphQLObjectType({
-//     name: 'RealTimeEstimates',
-//     fields: {
-//         // "minutes": "35", "platform": "2", "direction": "South", "length": "6", "color": "ORANGE", "hexcolor": "#ff9933", "bikeflag": "1", "delay": "0"
-//     }
-// });
+const RealTimeEstimatesType = new GraphQLObjectType({
+  name: "RealTimeEstimates",
+  fields: {
+    name: { type: GraphQLString },
+    abbr: { type: GraphQLString },
+    etd: {
+        type: new GraphQLList(EstimateByDestinationType),
+    }
+  }
+});
 
 const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-        routes: {
-            type: new GraphQLList(RouteType),
-            resolve() {
-                return getRoutes();
-            }
+  name: "RootQueryType",
+  fields: {
+    realTimeEstimate: {
+        type: RealTimeEstimatesType,
+        args: {
+            orig: { type: GraphQLString }
         },
-        route: {
-            type: RouteStationsType,
-            args: {
-                num: {
-                    type: GraphQLInt
-                }
-            },
-            resolve(parentValue, args) {
-                return getRouteByNum(args.num);
-            }
-        },
-        stations: {
-            type: new GraphQLList(StationType),
-            resolve() {
-                return getStations();
-            }
-        },
-        station: {
-            type: StationType,
-            args: {
-                abbr: {
-                    type: GraphQLString
-                }
-            },
-            resolve(parentValue, args) {
-                return getStationByAbbr(args.abbr);
-            }
-        },
+        resolve(parentValue, args) {
+            return getRealTimeEstimate(args.orig);
+        }
+      },
+    routes: {
+      type: new GraphQLList(RouteType),
+      resolve() {
+        return getRoutes();
+      }
+    },
+    route: {
+      type: RouteStationsType,
+      args: {
+        num: {
+          type: GraphQLInt
+        }
+      },
+      resolve(parentValue, args) {
+        return getRouteByNum(args.num);
+      }
+    },
+    stations: {
+      type: new GraphQLList(StationType),
+      resolve() {
+        return getStations();
+      }
+    },
+    station: {
+      type: StationType,
+      args: {
+        abbr: {
+          type: GraphQLString
+        }
+      },
+      resolve(parentValue, args) {
+        return getStationByAbbr(args.abbr);
+      }
     }
+  }
 });
 
 export default new GraphQLSchema({
